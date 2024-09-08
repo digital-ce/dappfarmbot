@@ -1,22 +1,23 @@
 import { Context } from 'telegraf';
 import createDebug from 'debug';
 
-const debug = createDebug('bot:greeting_text');
-
-const replyToMessage = (ctx: Context, messageId: number, string: string) =>
-  ctx.reply(string, {
-    reply_parameters: { message_id: messageId },
-  });
+const debug = createDebug('bot:command_handler');
 
 const greeting = () => async (ctx: Context) => {
-  debug('Triggered "greeting" text command');
+  const message = `👋 *Welcome to Dapp Farm!*\n\nExplore our platform to play games, earn tokens, and enhance your blockchain skills. Use the menu or type /help to get started! 🚀`;
 
-  const messageId = ctx.message?.message_id;
-  const userName = `${ctx.message?.from.first_name} ${ctx.message?.from.last_name}`;
+  const button = {
+    text: '🚀 Open Dapp Farm',
+    url: 'https://t.me/DappFarmBot/earn',
+  };
 
-  if (messageId) {
-    await replyToMessage(ctx, messageId, `Hello, ${userName}!`);
-  }
+  debug(`Triggered command with message \n${message}`);
+  await ctx.replyWithMarkdownV2(message, {
+    parse_mode: 'Markdown',
+    reply_markup: {
+      inline_keyboard: [[button]],
+    },
+  });
 };
 
 export { greeting };
